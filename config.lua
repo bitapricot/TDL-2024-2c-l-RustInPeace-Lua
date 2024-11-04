@@ -1,0 +1,1 @@
+-- Archivo de configuración para constantes globales como la probabilidad de aparición de ítems o límites de stats
