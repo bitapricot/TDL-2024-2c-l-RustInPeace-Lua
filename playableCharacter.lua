@@ -8,6 +8,10 @@ function PlayableCharacter:new(x, y, world)
     obj.x = x
     obj.y = y
     obj.speed = 25000
+    obj.health = 100  -- Inicialización de HP
+    obj.sanity = 100  -- Inicialización de Sanity
+    obj.maxHealth = 100
+    obj.maxSanity = 100
     obj.inventory = {}
     obj.spriteSheet = love.graphics.newImage('assets/sprites/player-sheet.png')
     obj.grid = anim8.newGrid(12, 18, obj.spriteSheet:getWidth(), obj.spriteSheet:getHeight())
@@ -71,5 +75,12 @@ function PlayableCharacter:addToInventory(item)
     print(item.data.name .. " fue añadido al inventario.")
 end
 
+function PlayableCharacter:heal(amount)
+    self.health = math.min(self.health + amount, self.maxHealth)  -- Suma HP sin exceder el máximo
+end
+
+function PlayableCharacter:restoreSanity(amount)
+    self.sanity = math.min(self.sanity + amount, self.maxSanity)  -- Suma Sanity sin exceder el máximo
+end
 
 return PlayableCharacter

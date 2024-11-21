@@ -25,6 +25,9 @@ function Game:load()
     self.zones["bosque"] = Zone:new("map_catacombs.lua", self.world)
     self.activeZone = self.zones["bosque"]  -- Establece la zona inicial
 
+    self.heartIcon = love.graphics.newImage('assets/sprites/icons/heart_hp.png')
+    self.brainIcon = love.graphics.newImage('assets/sprites/icons/brain_sp.png')
+
     -- Ajustar cámara al jugador
     self.camera:lookAt(self.player.x, self.player.y)
 end
@@ -89,6 +92,7 @@ function Game:draw()
     self.camera:detach()
 
     self:drawInventory()
+    self:drawStats()
 end
 
 function Game:drawInventory()
@@ -112,10 +116,30 @@ function Game:drawInventory()
             love.graphics.draw(item.sprite, inventoryX, itemY)
         end
 
-        -- Dibujar el nombre del ítem junto al ícono
-        love.graphics.print(item.data.name, inventoryX + 20, itemY + 2) -- Texto desplazado a la derecha del ícono
+        -- La idea seria mostrar los items asi:
+        -- "Nombre x{quantity} [{key_binding}]"
+        love.graphics.print(item.data.name .. " x1 [E]", inventoryX + 20, itemY + 2) -- Texto desplazado a la derecha del ícono
     end
 end
 
+function Game:drawStats()
+    -- Coordenadas fijas en la esquina superior derecha
+    local margin = 20  -- Espaciado desde los bordes
+    local iconSize = 20  -- Tamaño de los íconos
+
+    -- HP
+    local xPos = love.graphics.getWidth() - margin - iconSize - 50
+    local yPos = margin
+    love.graphics.draw(self.heartIcon, xPos, yPos, 0, 0.85, 0.85)
+    love.graphics.setColor(1, 1, 1)  -- Blanco para el texto
+    love.graphics.print(self.player.health .. "/" .. self.player.maxHealth, xPos + iconSize + 5, yPos)
+
+    -- Sanity
+    yPos = yPos + iconSize + margin  -- Espaciado entre los iconos
+    love.graphics.draw(self.brainIcon, xPos, yPos, 0, 0.85, 0.85)
+    love.graphics.print(self.player.sanity .. "/" .. self.player.maxSanity, xPos + iconSize + 5, yPos)
+
+    love.graphics.setColor(1, 1, 1)
+end
 
 return Game
