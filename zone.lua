@@ -1,4 +1,6 @@
 local sti = require "sti"
+local itemsData = require('assets/items/items')
+
 local scaleX, scaleY = 1.7, 2
 local Zone = {}
 Zone.__index = Zone
@@ -6,7 +8,8 @@ Zone.__index = Zone
 function Zone:new(mapFile, world)
     local obj = setmetatable({}, Zone)
     obj.map = sti(mapFile)               -- Carga el mapa desde Tiled
-    obj.colliders = {}                   -- Lista de colisionadores
+    obj.colliders = {}                   
+    obj.items = {}
 
     -- Crear colisiones basadas en el mapa
     if obj.map.layers["collisions"] then
@@ -19,6 +22,18 @@ function Zone:new(mapFile, world)
         end
     end
 
+    -- Cargar ítems para la zona actual
+     for _, itemData in ipairs(itemsData) do
+        -- if itemData.zone == zoneId and itemData.chapter == chapter then
+            table.insert(obj.items, {
+                data = itemData,
+                x = itemData.x,
+                y = itemData.y,
+                sprite = love.graphics.newImage(itemData.sprite)  -- Carga el sprite
+            })
+        -- end
+    end
+
     return obj
 end
 
@@ -26,17 +41,43 @@ function Zone:update(dt)
     -- Aquí se puede manejar lógica adicional específica de la zona
 end
 
+function loadItemSprites()
+    return {
+        [1] = love.graphics.newImage('assets/sprites/potion.png'),
+        [2] = love.graphics.newImage('assets/sprites/sanity_elixir.png')
+    }
+end
+
+
 function Zone:draw()
     love.graphics.push()
     love.graphics.scale(scaleX, scaleY)
-    -- Dibuja capas del mapa
+
     self.map:drawLayer(self.map.layers['ground'])
     self.map:drawLayer(self.map.layers['walls'])
     self.map:drawLayer(self.map.layers['connections'])
     self.map:drawLayer(self.map.layers['interactions'])
-    self.map:drawLayer(self.map.layers['items'])
+    -- self.map:drawLayer(self.map.layers['items'])
 
     love.graphics.pop()
+
+    for _, item in ipairs(self.items) do
+        if item.sprite then
+            local spriteWidth = item.sprite:getWidth() * scaleX
+            local spriteHeight = item.sprite:getHeight() * scaleY
+
+            love.graphics.draw(
+                item.sprite,
+                item.x - spriteWidth / 2,
+                item.y - spriteHeight / 2,
+                0,
+                scaleX,
+                scaleY
+            )
+        else
+            love.graphics.print(item.data.name, item.x, item.y)
+        end
+    end
 end
 
 function Zone:setActive(active)
