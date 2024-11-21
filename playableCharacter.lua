@@ -8,6 +8,7 @@ function PlayableCharacter:new(x, y, world)
     obj.x = x
     obj.y = y
     obj.speed = 25000
+    obj.inventory = {}
     obj.spriteSheet = love.graphics.newImage('assets/sprites/player-sheet.png')
     obj.grid = anim8.newGrid(12, 18, obj.spriteSheet:getWidth(), obj.spriteSheet:getHeight())
     obj.animations = {
@@ -64,5 +65,11 @@ end
 function PlayableCharacter:draw()
     self.anim:draw(self.spriteSheet, self.x, self.y, nil, 4, 4, 6, 9)
 end
+
+function PlayableCharacter:addToInventory(item)
+    table.insert(self.inventory, item)
+    print(item.data.name .. " fue añadido al inventario.")
+end
+
 
 return PlayableCharacter

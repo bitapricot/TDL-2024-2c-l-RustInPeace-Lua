@@ -37,8 +37,15 @@ function Zone:new(mapFile, world)
     return obj
 end
 
-function Zone:update(dt)
-    -- Aquí se puede manejar lógica adicional específica de la zona
+function Zone:update(dt, player)
+   for i = #self.items, 1, -1 do
+        local item = self.items[i]
+        local distance = math.sqrt((item.x - player.x)^2 + (item.y - player.y)^2)
+        if distance < 20 then -- Rango de recogida
+            player:addToInventory(item) -- Agrega al inventario
+            table.remove(self.items, i) -- Remueve del mapa
+        end
+    end
 end
 
 function loadItemSprites()

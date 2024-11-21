@@ -30,7 +30,7 @@ function Game:load()
 end
 
 function Game:update(dt)
-    self.activeZone:update(dt)  -- Actualiza la zona activa
+    self.activeZone:update(dt, self.player)  -- Actualiza la zona activa
     self.player:update(dt, self.camera)  -- Actualiza el jugador
     self.world:update(dt)                -- Actualiza el mundo físico
 
@@ -87,6 +87,35 @@ function Game:draw()
     self.activeZone:draw()  -- Dibuja el mapa y objetos de la zona
     self.player:draw()      -- Dibuja al jugador
     self.camera:detach()
+
+    self:drawInventory()
 end
+
+function Game:drawInventory()
+    local inventoryX, inventoryY = 20, 20
+    local width, height = 200, (#self.player.inventory + 1) * 25
+
+    -- Fondo semi-transparente para el inventario
+    love.graphics.setColor(0, 0, 0, 0.5) -- Negro con transparencia
+    love.graphics.rectangle("fill", inventoryX - 2, inventoryY - 2, width, height)
+    love.graphics.setColor(1, 1, 1) -- Blanco para el texto
+
+    -- Texto del título del inventario
+    love.graphics.print("Inventario:", inventoryX, inventoryY)
+
+    -- Dibujar los ítems en el inventario
+    for i, item in ipairs(self.player.inventory) do
+        local itemY = inventoryY + (i * 25) -- Espaciado entre ítems
+
+        -- Dibujar el ícono del ítem si tiene sprite
+        if item.sprite then
+            love.graphics.draw(item.sprite, inventoryX, itemY)
+        end
+
+        -- Dibujar el nombre del ítem junto al ícono
+        love.graphics.print(item.data.name, inventoryX + 20, itemY + 2) -- Texto desplazado a la derecha del ícono
+    end
+end
+
 
 return Game
