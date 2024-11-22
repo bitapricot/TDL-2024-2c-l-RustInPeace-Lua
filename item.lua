@@ -1,11 +1,13 @@
 Item = {}
 Item.__index = Item
 
-function Item:new(name, effect)
+function Item:new(name, effect, quantity, sprite)
     local item = {}
     setmetatable(item, Item)
     item.name = name                    -- Nombre del ítem
     item.effect = effect                -- Función de efecto del ítem
+    item.quantity = quantity
+    item.sprite = sprite
     return item
 end
 
@@ -13,7 +15,7 @@ end
 function Item:applyEffect(target)
     if target and self.effect then
         self.effect(target)
-        print(self.name .. " ha sido usado en " .. target:getName() .. ".")
+        print(self.name .. " ha sido utilizado.")
     else
         print("No se puede aplicar el efecto de " .. self.name .. ".")
     end
@@ -24,3 +26,5 @@ function Item:draw(x, y)
     -- Ejemplo básico de visualización
     love.graphics.print(self.name, x, y)
 end
+
+return Item

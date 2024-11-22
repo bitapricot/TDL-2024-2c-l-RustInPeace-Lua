@@ -3,16 +3,19 @@ PlayableCharacter.__index = PlayableCharacter
 
 local anim8 = require "lib/anim8"
 
+local Item = require "item"
+local Inventory = require "inventory"
+
 function PlayableCharacter:new(x, y, world)
     local obj = setmetatable({}, PlayableCharacter)
     obj.x = x
     obj.y = y
     obj.speed = 25000
-    obj.health = 100  -- Inicialización de HP
-    obj.sanity = 100  -- Inicialización de Sanity
+    obj.health = 50  -- Inicialización de HP
+    obj.sanity = 50  -- Inicialización de Sanity
     obj.maxHealth = 100
     obj.maxSanity = 100
-    obj.inventory = {}
+    obj.inventory = Inventory:new()
     obj.spriteSheet = love.graphics.newImage('assets/sprites/player-sheet.png')
     obj.grid = anim8.newGrid(12, 18, obj.spriteSheet:getWidth(), obj.spriteSheet:getHeight())
     obj.animations = {
@@ -64,6 +67,18 @@ function PlayableCharacter:update(dt, camera)
 
     -- Ajustar cámara
     camera:lookAt(self.x, self.y)
+
+    self:checkUseItemKeys()
+end
+
+function PlayableCharacter:checkUseItemKeys()
+    for i = 1, 9 do
+        if love.keyboard.isDown(tostring(i)) then
+            -- Usar el ítem correspondiente al índice de la tecla
+            self:useItemByIndex(i)
+            break  -- Evitar manejar múltiples teclas al mismo tiempo
+        end
+    end
 end
 
 function PlayableCharacter:draw()
@@ -71,8 +86,7 @@ function PlayableCharacter:draw()
 end
 
 function PlayableCharacter:addToInventory(item)
-    table.insert(self.inventory, item)
-    print(item.data.name .. " fue añadido al inventario.")
+    self.inventory:addItem(item)
 end
 
 function PlayableCharacter:heal(amount)
@@ -82,5 +96,25 @@ end
 function PlayableCharacter:restoreSanity(amount)
     self.sanity = math.min(self.sanity + amount, self.maxSanity)  -- Suma Sanity sin exceder el máximo
 end
+
+function PlayableCharacter:useItemByIndex(index)
+    local item = self.inventory:getItem(index)
+    if item then
+        -- Aplicar el efecto del ítem al jugador
+        item:applyEffect(self)
+
+        -- Reducir la cantidad del ítem
+        item.quantity = item.quantity - 1
+        print("Usaste " .. item.name .. ". Quedan " .. item.quantity .. ".")
+
+        -- Eliminar el ítem si la cantidad llega a 0
+        if item.quantity <= 0 then
+            self.inventory:removeItem(item)
+        end
+    else
+        print("No hay un ítem en el índice " .. index .. ".")
+    end
+end
+
 
 return PlayableCharacter

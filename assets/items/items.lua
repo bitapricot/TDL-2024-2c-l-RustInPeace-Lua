@@ -7,6 +7,7 @@ return {
             target:heal(50)
         end,
         chapter = 1,
+        quantity = 1,
         zone = 1,
         x = 200,
         y = 250,
@@ -20,6 +21,7 @@ return {
             target:restoreSanity(30)
         end,
         chapter = 1,
+        quantity = 1,
         zone = 1,
         x = 300,
         y = 450,

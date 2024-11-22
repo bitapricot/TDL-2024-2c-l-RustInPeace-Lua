@@ -29,6 +29,8 @@ function Zone:new(mapFile, world)
                 data = itemData,
                 x = itemData.x,
                 y = itemData.y,
+                quantity = itemData.quantity,
+                effect = itemData.effect,
                 sprite = love.graphics.newImage(itemData.sprite)  -- Carga el sprite
             })
         -- end

@@ -1,6 +1,8 @@
 Inventory = {}
 Inventory.__index = Inventory
 
+local Item = require 'item'
+
 function Inventory:new()
     local inv = {}
     setmetatable(inv, Inventory)
@@ -10,8 +12,16 @@ end
 
 -- Agrega un ítem al inventario
 function Inventory:addItem(item)
-    table.insert(self.items, item)
-    print(item.name .. " fue agregado al inventario.")
+    table.insert(self.items, Item:new(item.data.name, item.data.effect, item.data.quantity, love.graphics.newImage(item.data.sprite)))
+    print(item.data.name .. " fue agregado al inventario.")
+end
+
+function Inventory:getItem(index)
+    return self.items[index]
+end
+
+function Inventory:getItems()
+    return self.items
 end
 
 -- Remueve un ítem específico del inventario
@@ -37,3 +47,5 @@ function Inventory:useItem(index, player)
         print("No hay un ítem en esa posición del inventario.")
     end
 end
+
+return Inventory

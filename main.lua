@@ -4,6 +4,8 @@ local camera = require 'lib/camera'
 local wf = require 'lib/windfield'
 local Game = require 'Game'
 
+io.stdout:setvbuf("no")
+
 function love.load()
     love.graphics.setDefaultFilter("nearest", "nearest")
 

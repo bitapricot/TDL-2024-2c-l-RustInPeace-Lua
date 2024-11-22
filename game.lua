@@ -108,7 +108,7 @@ function Game:drawInventory()
     love.graphics.print("Inventario:", inventoryX, inventoryY)
 
     -- Dibujar los ítems en el inventario
-    for i, item in ipairs(self.player.inventory) do
+    for i, item in ipairs(self.player.inventory:getItems()) do
         local itemY = inventoryY + (i * 25) -- Espaciado entre ítems
 
         -- Dibujar el ícono del ítem si tiene sprite
@@ -118,7 +118,7 @@ function Game:drawInventory()
 
         -- La idea seria mostrar los items asi:
         -- "Nombre x{quantity} [{key_binding}]"
-        love.graphics.print(item.data.name .. " x1 [E]", inventoryX + 20, itemY + 2) -- Texto desplazado a la derecha del ícono
+        love.graphics.print("[" .. i .."] " .. item.name .. " x" .. item.quantity, inventoryX + 20, itemY + 2) -- Texto desplazado a la derecha del ícono
     end
 end
 
