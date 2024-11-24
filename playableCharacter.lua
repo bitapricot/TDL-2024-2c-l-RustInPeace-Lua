@@ -116,5 +116,24 @@ function PlayableCharacter:useItemByIndex(index)
     end
 end
 
+function PlayableCharacter:takeDamage(amount)
+    -- Reducir la salud del personaje
+    self.health = self.health - amount
+
+    -- Imprimir mensaje en consola
+    print("¡Has recibido " .. amount .. " de daño! Salud actual: " .. self.health .. "/" .. self.maxHealth)
+
+    -- Verificar si la salud llega a 0 o menos
+    if self.health <= 0 then
+        self:die()
+    end
+end
+
+function PlayableCharacter:die()
+    -- Lógica para cuando el personaje muere
+    print("El personaje ha muerto.")
+    -- Aquí podrías reiniciar el nivel, mostrar una pantalla de "Game Over", etc.
+end
+
 
 return PlayableCharacter

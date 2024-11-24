@@ -5,6 +5,18 @@ local scaleX, scaleY = 1.7, 2
 local Zone = {}
 Zone.__index = Zone
 
+-- VER DONDE PONER LA INSTANCIACION DE ENEMIGOS
+local Soul = require("Soul")
+local Draugr = require("Draugr")
+local Spirit = require("Spirit")
+
+local enemies = {
+    Soul:new(100, 100),
+    Draugr:new(200, 200),
+    Spirit:new(400, 400),
+}
+
+
 function Zone:new(mapFile, world)
     local obj = setmetatable({}, Zone)
     obj.map = sti(mapFile)               -- Carga el mapa desde Tiled
@@ -48,6 +60,10 @@ function Zone:update(dt, player)
             table.remove(self.items, i) -- Remueve del mapa
         end
     end
+    
+    for _, enemy in ipairs(enemies) do
+        enemy:update(dt, player)
+    end
 end
 
 function loadItemSprites()
@@ -87,6 +103,11 @@ function Zone:draw()
             love.graphics.print(item.data.name, item.x, item.y)
         end
     end
+    
+    for _, enemy in ipairs(enemies) do
+        enemy:draw()
+    end
+
 end
 
 function Zone:setActive(active)
