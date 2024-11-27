@@ -8,7 +8,6 @@ function Enemy:new(x, y, speed, damage)
         speed = speed or 100,  -- Velocidad base
         damage = damage or 10, -- Daño base
         state = "idle",  -- Estados genéricos: "idle", "chasing", "attacking"
-        sprite = love.graphics.newImage('assets/sprites/gorgon/run.png'), -- Cargar el sprite
         detectionRadius = 150, -- Rango en el que detecta al jugador
     }
     setmetatable(enemy, Enemy)
