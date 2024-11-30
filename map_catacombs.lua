@@ -9,8 +9,8 @@ return {
   height = 20,
   tilewidth = 16,
   tileheight = 16,
-  nextlayerid = 10,
-  nextobjectid = 16,
+  nextlayerid = 11,
+  nextobjectid = 22,
   properties = {},
   tilesets = {
     {
@@ -403,6 +403,61 @@ return {
           y = 183.5,
           width = 10,
           height = 39.5,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        }
+      }
+    },
+    {
+      type = "objectgroup",
+      draworder = "topdown",
+      id = 10,
+      name = "zone_connections",
+      class = "",
+      visible = true,
+      opacity = 1,
+      offsetx = 0,
+      offsety = 0,
+      parallaxx = 1,
+      parallaxy = 1,
+      properties = {},
+      objects = {
+        {
+          id = 16,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 490.667,
+          y = 70,
+          width = 20,
+          height = 250,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 20,
+          name = "",
+          type = "",
+          shape = "point",
+          x = 373.333,
+          y = 281.333,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 21,
+          name = "",
+          type = "",
+          shape = "point",
+          x = 432.667,
+          y = 28.6667,
+          width = 0,
+          height = 0,
           rotation = 0,
           visible = true,
           properties = {}

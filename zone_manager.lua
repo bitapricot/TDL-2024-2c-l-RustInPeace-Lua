@@ -1,26 +1,39 @@
 ZoneManager = {}
 ZoneManager.__index = ZoneManager
 
-function ZoneManager:new(zones)
+local Zone = require('Zone')
+
+function ZoneManager:new(filePath, world)
     local manager = {
-        zones = zones or {},
+        zones = self:loadZones(filePath, world),
         currentZone = nil
     }
     setmetatable(manager, self)
     return manager
 end
 
+function ZoneManager:loadZones(filePath, world)
+    local zonesData = require(filePath)
+    local parsedZones = {}
+    local currentZoneConnections = {}
 
-function ZoneManager:loadZones(filePath)
-    local data = dofile(filePath) -- pcall??
-    self.zones = data.zones
+    for _, zoneData in ipairs(zonesData) do
+        table.insert(parsedZones, Zone:new(zoneData.mapFile, world, zoneData.id, zoneData.name, zoneData.connections))
+    end
+
+    return parsedZones
 end
-
 
 function ZoneManager:setCurrentZone(zoneId)
+    if self.currentZone then
+        self.currentZone:setActive(false)
+        self.currentZone:clear() -- clear current zone collisions and items from world
+    end
     self.currentZone = self:getZone(zoneId)
+    self.currentZone:setActive(true)
+    self.currentZone:loadCurrentCollisions()
+    self.currentZone:loadCurrentItems()
 end
-
 
 function ZoneManager:getZone(zoneId)
     for _, zone in ipairs(self.zones) do
@@ -31,12 +44,10 @@ function ZoneManager:getZone(zoneId)
     return nil
 end
 
-
-function ZoneManager:getConnections(zoneId)
-    local zone = self:getZone(zoneId)
-    return zone and zone.connections or {}
-end
-
+-- function ZoneManager:getConnections(zoneId)
+--     local zone = self:getZone(zoneId)
+--     return zone and zone.connections or {}
+-- end
 
 function ZoneManager:transitionTo(zoneId, player, entryPoint)
     local targetZone = self:getZone(zoneId)
@@ -55,3 +66,5 @@ function ZoneManager:transitionTo(zoneId, player, entryPoint)
         player.y = entryPoint.y
     end
 end
+
+return ZoneManager
