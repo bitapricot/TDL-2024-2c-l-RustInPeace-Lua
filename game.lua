@@ -23,7 +23,7 @@ function Game:load()
     self.player = PlayableCharacter:new(400, 200)
 
     -- self.activeZone = zoneManager:getZone("zone2")
-    zoneManager:setCurrentZone("zone2")
+    zoneManager:setCurrentZone("zone1")
     self.heartIcon = love.graphics.newImage('assets/sprites/icons/heart_hp.png')
     self.brainIcon = love.graphics.newImage('assets/sprites/icons/brain_sp.png')
 
