@@ -8,7 +8,7 @@ return {
         end,
         chapter = 1,
         quantity = 1,
-        zone = 1,
+        zoneId = "zone2",
         x = 200,
         y = 250,
         sprite = "assets/sprites/potion.png"  -- Ruta al sprite
@@ -22,7 +22,7 @@ return {
         end,
         chapter = 1,
         quantity = 1,
-        zone = 1,
+        zoneId = "zone2",
         x = 300,
         y = 450,
         sprite = "assets/sprites/sanity_elixir.png"  -- Ruta al sprite

@@ -21,7 +21,8 @@ function Zone:new(mapFile, zoneId, name, connections)
     obj.items = {}
     obj.connections = {}
     obj.isActive = false
-
+    obj.entryPoint = {}
+    
     -- Escalar las conexiones
     if connections then
         for _, connection in ipairs(connections) do
@@ -49,6 +50,10 @@ function Zone:new(mapFile, zoneId, name, connections)
                 }
             end
 
+            if connection.entryPoint then
+                scaledConnection.entryPoint = connection.entryPoint
+            end
+
             table.insert(obj.connections, scaledConnection)
         end
     end
@@ -69,14 +74,16 @@ end
 
 function Zone:loadCurrentItems()
     for _, itemData in ipairs(itemsData) do
-        table.insert(self.items, {
-            data = itemData,
-            x = itemData.x,
-            y = itemData.y,
-            quantity = itemData.quantity,
-            effect = itemData.effect,
-            sprite = love.graphics.newImage(itemData.sprite) -- Carga el sprite
-        })
+        if itemData.zoneId == self.id then
+            table.insert(self.items, {
+                data = itemData,
+                x = itemData.x,
+                y = itemData.y,
+                quantity = itemData.quantity,
+                effect = itemData.effect,
+                sprite = love.graphics.newImage(itemData.sprite) -- Carga el sprite
+            })
+        end
     end
 end
 
@@ -170,8 +177,9 @@ function Zone:checkConnectionArea(player)
             if player.x >= conn.area.x1 and player.x <= conn.area.x2 and player.y >= conn.area.y1 and player.y <=
                 conn.area.y2 then
                 print("Transición a: " .. conn.toZone)
-                local entryPoint = { x = 400, y = 200 }
-                zoneManager:transitionTo(conn.toZone, player, entryPoint)
+                print(conn.entryPoint.x)
+                print(conn.entryPoint.y)
+                zoneManager:transitionTo(conn.toZone, player, conn.entryPoint)
             end
         end
     end
