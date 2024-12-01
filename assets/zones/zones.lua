@@ -12,9 +12,9 @@ zones = { -- PENDIENTE COMPLETAR BIEN LAS COORDENADAS Y LOS MAPAS
         name = "The Catacombs (main hall)",
         mapFile = "map_catacombs.lua",
         connections = {
-            { toZone = "zone1", position = { x = 50, y = 300 } }, -- Puerta de vuelta al forest
-            { toZone = "zone3", area = { x1 = 800, y1 = 0, x2 = 900, y2 = 600 } }, -- pasillo final de las catacombs
-            { toZone = "zone4", position = { x = 50, y = 300 } }, -- downstairs
+            -- { toZone = "zone1", position = { x = 50, y = 300 } }, -- Puerta de vuelta al forest
+            { toZone = "zone3", area = { x1 = 508.67, y1 = 70, x2 = 510.67, y2 = 320 } }, -- pasillo final de las catacombs
+            -- { toZone = "zone4", position = { x = 50, y = 300 } }, -- downstairs 
 
         }
     },

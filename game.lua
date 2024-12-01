@@ -8,23 +8,22 @@ local ZoneManager = require("zone_manager")
 local Zone = require 'Zone'
 local PlayableCharacter = require 'PlayableCharacter'
 
+world = wf.newWorld(0, 0)
+zoneManager = ZoneManager:new('assets/zones/zones') -- static
+
 function Game:new()
     local obj = setmetatable({}, Game)
-    obj.world = wf.newWorld(0, 0)        -- Mundo físico
     obj.camera = camera()                -- Cámara
-    -- obj.zones = {}                       -- Zonas del mapa
-    -- obj.activeZone = nil                 -- Zona activa
     obj.player = nil                     -- Instancia del jugador
-    obj.zoneManager = ZoneManager:new('assets/zones/zones', obj.world)
     return obj
 end
 
 function Game:load()
     -- Crear jugador
-    self.player = PlayableCharacter:new(400, 200, self.world)
+    self.player = PlayableCharacter:new(400, 200)
 
-    -- self.activeZone = self.zoneManager:getZone("zone2")
-    self.zoneManager:setCurrentZone("zone2")
+    -- self.activeZone = zoneManager:getZone("zone2")
+    zoneManager:setCurrentZone("zone2")
     self.heartIcon = love.graphics.newImage('assets/sprites/icons/heart_hp.png')
     self.brainIcon = love.graphics.newImage('assets/sprites/icons/brain_sp.png')
 
@@ -33,16 +32,16 @@ function Game:load()
 end
 
 function Game:update(dt)
-    self.zoneManager.currentZone:update(dt, self.player)  -- Actualiza la zona activa
+    zoneManager.currentZone:update(dt, self.player)  -- Actualiza la zona activa
     self.player:update(dt, self.camera)  -- Actualiza el jugador
-    self.world:update(dt)                -- Actualiza el mundo físico
+    world:update(dt)                     -- Actualiza el mundo físico
 
     self.player.x = self.player.collider:getX()
     self.player.y = self.player.collider:getY()
     
     -- Limit char position inside map
-    local mapWidth = self.zoneManager.currentZone.map.width * self.zoneManager.currentZone.map.tilewidth * scaleX
-    local mapHeight = self.zoneManager.currentZone.map.height * self.zoneManager.currentZone.map.tileheight * scaleY
+    local mapWidth = zoneManager.currentZone.map.width * zoneManager.currentZone.map.tilewidth * scaleX
+    local mapHeight = zoneManager.currentZone.map.height * zoneManager.currentZone.map.tileheight * scaleY
     local playerWidth = 12 * scaleX 
     local playerHeight = 18 * scaleY
 
@@ -64,8 +63,8 @@ function Game:update(dt)
     self.camera:lookAt(self.player.x, self.player.y)
 
     -- Limitar la cámara al tamaño del mapa
-    local mapWidth = self.zoneManager.currentZone.map.width * self.zoneManager.currentZone.map.tilewidth * scaleX
-    local mapHeight = self.zoneManager.currentZone.map.height * self.zoneManager.currentZone.map.tileheight * scaleY
+    local mapWidth = zoneManager.currentZone.map.width * zoneManager.currentZone.map.tilewidth * scaleX
+    local mapHeight = zoneManager.currentZone.map.height * zoneManager.currentZone.map.tileheight * scaleY
     local screenWidth = love.graphics.getWidth()
     local screenHeight = love.graphics.getHeight()
 
@@ -87,7 +86,7 @@ end
 
 function Game:draw()
     self.camera:attach()
-    self.zoneManager.currentZone:draw()  -- Dibuja el mapa y objetos de la zona
+    zoneManager.currentZone:draw()  -- Dibuja el mapa y objetos de la zona
     self.player:draw()      -- Dibuja al jugador
     self.camera:detach()
 

@@ -3,22 +3,22 @@ ZoneManager.__index = ZoneManager
 
 local Zone = require('Zone')
 
-function ZoneManager:new(filePath, world)
+function ZoneManager:new(filePath)
     local manager = {
-        zones = self:loadZones(filePath, world),
+        zones = self:loadZones(filePath),
         currentZone = nil
-    }
+    } 
     setmetatable(manager, self)
     return manager
 end
 
-function ZoneManager:loadZones(filePath, world)
+function ZoneManager:loadZones(filePath)
     local zonesData = require(filePath)
     local parsedZones = {}
     local currentZoneConnections = {}
 
     for _, zoneData in ipairs(zonesData) do
-        table.insert(parsedZones, Zone:new(zoneData.mapFile, world, zoneData.id, zoneData.name, zoneData.connections))
+        table.insert(parsedZones, Zone:new(zoneData.mapFile, zoneData.id, zoneData.name, zoneData.connections))
     end
 
     return parsedZones
@@ -27,10 +27,11 @@ end
 function ZoneManager:setCurrentZone(zoneId)
     if self.currentZone then
         self.currentZone:setActive(false)
-        self.currentZone:clear() -- clear current zone collisions and items from world
+        --self.currentZone:clear() -- clear current zone collisions and items from world
     end
     self.currentZone = self:getZone(zoneId)
     self.currentZone:setActive(true)
+    print(self.currentZone.id)
     self.currentZone:loadCurrentCollisions()
     self.currentZone:loadCurrentItems()
 end
@@ -55,15 +56,18 @@ function ZoneManager:transitionTo(zoneId, player, entryPoint)
         print("Error: Zona destino no encontrada: " .. zoneId)
         return
     end
-
+    
+    if self.currentZone then
+        self.currentZone:clearColliders()
+    end
+    
     -- este metodo tendria la carga de la nueva zona y cualquier otra logica
     self:setCurrentZone(zoneId)
     print("Transición completada a la zona: " .. zoneId)
 
     -- para reposicionar al jugador
     if entryPoint then
-        player.x = entryPoint.x
-        player.y = entryPoint.y
+        player:setPosition(entryPoint)
     end
 end
 

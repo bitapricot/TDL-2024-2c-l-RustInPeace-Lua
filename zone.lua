@@ -12,16 +12,46 @@ local Spirit = require("Spirit")
 
 local enemies = {Soul:new(100, 100), Draugr:new(200, 200), Spirit:new(400, 400)}
 
-function Zone:new(mapFile, world, zoneId, name, connections)
+function Zone:new(mapFile, zoneId, name, connections)
     local obj = setmetatable({}, Zone)
     obj.map = sti(mapFile) -- Carga el mapa desde Tiled
     obj.id = zoneId
     obj.name = name
     obj.colliders = {}
     obj.items = {}
-    obj.connections = connections
+    obj.connections = {}
     obj.isActive = false
-    obj.world = world
+
+    -- Escalar las conexiones
+    if connections then
+        for _, connection in ipairs(connections) do
+            local scaledConnection = {
+                toZone = connection.toZone
+            }
+
+            print(scaledConnection)
+
+            -- Escalar posición, si existe
+            if connection.position then
+                scaledConnection.position = {
+                    x = connection.position.x * scaleX,
+                    y = connection.position.y * scaleY
+                }
+            end
+
+            -- Escalar área, si existe
+            if connection.area then
+                scaledConnection.area = {
+                    x1 = connection.area.x1 * scaleX,
+                    y1 = connection.area.y1 * scaleY,
+                    x2 = connection.area.x2 * scaleX,
+                    y2 = connection.area.y2 * scaleY
+                }
+            end
+
+            table.insert(obj.connections, scaledConnection)
+        end
+    end
 
     return obj
 end
@@ -29,7 +59,7 @@ end
 function Zone:loadCurrentCollisions()
     if self.map.layers["collisions"] then
         for _, objData in pairs(self.map.layers["collisions"].objects) do
-            local collider = self.world:newRectangleCollider(objData.x * scaleX, objData.y * scaleY, objData.width * scaleX,
+            local collider = world:newRectangleCollider(objData.x * scaleX, objData.y * scaleY, objData.width * scaleX,
                 objData.height * scaleY)
             collider:setType('static')
             table.insert(self.colliders, collider)
@@ -70,7 +100,7 @@ function Zone:update(dt, player)
         end
 
         -- self:checkConnectionPoint(player)
-        -- self:checkConnectionArea(player)
+        self:checkConnectionArea(player)
     end
 end
 
@@ -115,7 +145,7 @@ function Zone:setActive(active)
     self.isActive = active
 end
 
-function checkConnectionPoint(player)
+function Zone:checkConnectionPoint(player)
     for _, conn in ipairs(self.connections) do
         if conn.position then
             local dx = math.abs(player.x - conn.position.x)
@@ -127,12 +157,21 @@ function checkConnectionPoint(player)
     end
 end
 
-function checkConnectionArea(player)
+function Zone:clearColliders()
+    for _, collider in ipairs(self.colliders) do
+        collider:destroy() -- Destruye el collider del mundo
+    end
+    self.colliders = {} -- Vacía la lista de colliders
+end
+
+function Zone:checkConnectionArea(player)
     for _, conn in ipairs(self.connections) do
         if conn.area then
             if player.x >= conn.area.x1 and player.x <= conn.area.x2 and player.y >= conn.area.y1 and player.y <=
                 conn.area.y2 then
                 print("Transición a: " .. conn.toZone)
+                local entryPoint = { x = 400, y = 200 }
+                zoneManager:transitionTo(conn.toZone, player, entryPoint)
             end
         end
     end

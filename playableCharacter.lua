@@ -6,7 +6,7 @@ local anim8 = require "lib/anim8"
 local Item = require "item"
 local Inventory = require "inventory"
 
-function PlayableCharacter:new(x, y, world)
+function PlayableCharacter:new(x, y)
     local obj = setmetatable({}, PlayableCharacter)
     obj.x = x
     obj.y = y
@@ -133,6 +133,15 @@ function PlayableCharacter:die()
     -- Lógica para cuando el personaje muere
     print("El personaje ha muerto.")
     -- Aquí podrías reiniciar el nivel, mostrar una pantalla de "Game Over", etc.
+end
+
+function PlayableCharacter:setPosition(entryPoint)
+    -- Actualizar posición del collider
+    self.collider:setPosition(entryPoint.x, entryPoint.y)
+
+    -- Sincronizar la posición del personaje con el collider
+    self.x = self.collider:getX()
+    self.y = self.collider:getY()
 end
 
 
