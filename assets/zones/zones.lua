@@ -34,30 +34,32 @@ zones = { -- PENDIENTE COMPLETAR BIEN LAS COORDENADAS Y LOS MAPAS
     connections = {{
         toZone = "zone2",
         area = {
-            x1 = 800,
-            y1 = 0,
-            x2 = 900,
-            y2 = 600
+            x1 = 0.50,
+            y1 = 75.27,
+            x2 = 10.50,
+            y2 = 320.28
+        },
+        entryPoint = {
+            x = 850,
+            y = 160
         }
-    } -- vuelta al pasillo central de las catacombs
-    }
-} -- {
---     id = "zone4",
---     name = "The Catacombs (downstairs)",
---     mapFile = "map_catacombs.lua",
---     connections = {
---         { toZone = "zone2", position = { x = 50, y = 300 } }, -- vuelta al pasillo central de las catacombs
---         { toZone = "zone5", position = { x = 50, y = 300 } }, -- entrada al castillo (subterraneo ??)
---     }
--- },
--- {
---     id = "zone5",
---     name = "The Castle",
---     mapFile = "map_catacombs.lua",
---     connections = {
---         -- dead end
---     }
--- }
-}
+    }} -- {
+    --     id = "zone4",
+    --     name = "The Catacombs (downstairs)",
+    --     mapFile = "map_catacombs.lua",
+    --     connections = {
+    --         { toZone = "zone2", position = { x = 50, y = 300 } }, -- vuelta al pasillo central de las catacombs
+    --         { toZone = "zone5", position = { x = 50, y = 300 } }, -- entrada al castillo (subterraneo ??)
+    --     }
+    -- },
+    -- {
+    --     id = "zone5",
+    --     name = "The Castle",
+    --     mapFile = "map_catacombs.lua",
+    --     connections = {
+    --         -- dead end
+    --     }
+    -- }
+}}
 
 return zones
