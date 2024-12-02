@@ -102,6 +102,18 @@ zones = { -- PENDIENTE COMPLETAR BIEN LAS COORDENADAS Y LOS MAPAS
             x = 100,
             y = 100
         }
+    }, {
+        toZone = "zone6",
+        area = {
+            x1 = 366.50,
+            y1 = 261.50,
+            x2 = 384,
+            y2 = 290
+        },
+        entryPoint = {
+            x = 100,
+            y = 100
+        }
     }}
 }, {
     id = "zone5",
@@ -120,6 +132,103 @@ zones = { -- PENDIENTE COMPLETAR BIEN LAS COORDENADAS Y LOS MAPAS
             y = 160
         }
     }}
+}, {
+    id = "zone6",
+    name = "The Catacombs (ritual)",
+    mapFile = "map_catacombs3.lua",
+    connections = {{
+        toZone = "zone4",
+        area = {
+            x1 = 15.33,
+            y1 = 62,
+            x2 = 50.66,
+            y2 = 79.33
+        },
+        entryPoint = {
+            x = 850,
+            y = 160
+        }
+    }, {
+        toZone = "zone7",
+        area = {
+            x1 = 498,
+            y1 = 96.67,
+            x2 = 512,
+            y2 = 191.34
+        },
+        entryPoint = {
+            x = 150,
+            y = 150
+        }
+    }}
+}, {
+    id = "zone7",
+    name = "The Catacombs (ritual cont.)",
+    mapFile = "map_catacombs4.lua",
+    connections = {{
+        toZone = "zone6",
+        area = {
+            x1 = 0,
+            y1 = 98.67,
+            x2 = 16.33,
+            y2 = 188.67
+        },
+        entryPoint = {
+            x = 850,
+            y = 160
+        }
+    }, {
+        toZone = "zone8",
+        area = {
+            x1 = 384,
+            y1 = 2.50,
+            x2 = 420,
+            y2 = 21
+        },
+        entryPoint = {
+            x = 150,
+            y = 150
+        }
+    }}
+}, {
+    id = "zone8",
+    name = "The Catacombs (exit)",
+    mapFile = "map_catacombs5.lua",
+    connections = {{
+        toZone = "zone9",
+        area = {
+            x1 = 486.67,
+            y1 = 102,
+            x2 = 511.34,
+            y2 = 322
+        },
+        entryPoint = {
+            x = 150,
+            y = 150
+        }
+    }}
+}, {
+    id = "zone9",
+    name = "The Catacombs (castle garden)",
+    mapFile = "map_catacombs6.lua",
+    connections = {{
+        toZone = "zone10",
+        area = {
+            x1 = 410.67,
+            y1 = 0.33,
+            x2 = 468,
+            y2 = 31
+        },
+        entryPoint = {
+            x = 800,
+            y = 600
+        }
+    }}
+}, {
+    id = "zone10",
+    name = "The Castle (entrance)",
+    mapFile = "map_castle.lua",
+    connections = {}
 }}
 
 return zones
