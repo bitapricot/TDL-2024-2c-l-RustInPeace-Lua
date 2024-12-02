@@ -18,7 +18,7 @@ end
 
 function ItemManager:getAllItems()
     local allItems = {}
-    for _, item in pairs(items) do
+    for _, item in pairs(items) do  
         table.insert(allItems, item)
     end
     return allItems

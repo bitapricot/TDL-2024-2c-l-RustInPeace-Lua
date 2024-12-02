@@ -8,6 +8,7 @@ function Item:new(name, effect, quantity, sprite)
     item.effect = effect                -- Función de efecto del ítem
     item.quantity = quantity
     item.sprite = sprite
+    item.deleted = false
     return item
 end
 

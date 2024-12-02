@@ -21,3 +21,11 @@ end
 function love.draw()
     game:draw()
 end
+
+
+function love.keypressed(key)
+    local num = tonumber(key)  -- Convertir la tecla a número
+    if num and num >= 1 and num <= 9 then
+        game.player:useItemByIndex(num)  -- Usar el ítem correspondiente al índice
+    end
+end

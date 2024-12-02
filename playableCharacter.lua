@@ -68,7 +68,7 @@ function PlayableCharacter:update(dt, camera)
     -- Ajustar cámara
     camera:lookAt(self.x, self.y)
 
-    self:checkUseItemKeys()
+    -- self:checkUseItemKeys()
 end
 
 function PlayableCharacter:checkUseItemKeys()
@@ -98,22 +98,7 @@ function PlayableCharacter:restoreSanity(amount)
 end
 
 function PlayableCharacter:useItemByIndex(index)
-    local item = self.inventory:getItem(index)
-    if item then
-        -- Aplicar el efecto del ítem al jugador
-        item:applyEffect(self)
-
-        -- Reducir la cantidad del ítem
-        item.quantity = item.quantity - 1
-        print("Usaste " .. item.name .. ". Quedan " .. item.quantity .. ".")
-
-        -- Eliminar el ítem si la cantidad llega a 0
-        if item.quantity <= 0 then
-            self.inventory:removeItem(item)
-        end
-    else
-        print("No hay un ítem en el índice " .. index .. ".")
-    end
+    self.inventory:useItem(index, self)
 end
 
 function PlayableCharacter:takeDamage(amount)

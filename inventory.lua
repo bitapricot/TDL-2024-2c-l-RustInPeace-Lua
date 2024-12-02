@@ -10,25 +10,49 @@ function Inventory:new()
     return inv
 end
 
--- Agrega un ítem al inventario
 function Inventory:addItem(item)
-    table.insert(self.items, Item:new(item.data.name, item.data.effect, item.data.quantity, love.graphics.newImage(item.data.sprite)))
-    print(item.data.name .. " fue agregado al inventario.")
+    -- Buscar si ya existe un ítem con el mismo nombre y que no esté eliminado
+    local existingItem = nil
+    for _, invItem in ipairs(self.items) do
+        if invItem.name == item.data.name and not invItem.deleted then
+            existingItem = invItem
+            break
+        end
+    end
+
+    if existingItem then
+        -- Si el ítem ya existe y no está eliminado, incrementar su cantidad
+        existingItem.quantity = existingItem.quantity + item.data.quantity
+        print("Cantidad de " .. item.data.name .. " incrementada a " .. existingItem.quantity .. ".")
+    else
+        -- Si el ítem no existe o está eliminado, agregar uno nuevo
+        table.insert(self.items, Item:new(item.data.name, item.data.effect, item.data.quantity, love.graphics.newImage(item.data.sprite)))
+        print(item.data.name .. " fue agregado al inventario.")
+    end
 end
 
+
 function Inventory:getItem(index)
-    return self.items[index]
+    return self:getItems()[index]
 end
 
 function Inventory:getItems()
-    return self.items
+    local validItems = {}
+    for _, item in ipairs(self.items) do
+        if not item.deleted then
+            table.insert(validItems, item)
+        end
+    end
+    return validItems
 end
+
 
 -- Remueve un ítem específico del inventario
 function Inventory:removeItem(item)
-    for i, invItem in ipairs(self.items) do
+    for i, invItem in ipairs(self:getItems()) do
         if invItem == item then
-            table.remove(self.items, i)
+            -- table.remove(self.items, i)
+            item.deleted = true
             print(item.name .. " fue removido del inventario.")
             return true
         end
@@ -37,12 +61,20 @@ function Inventory:removeItem(item)
     return false
 end
 
--- Usa un ítem en el inventario
 function Inventory:useItem(index, player)
-    local item = self.items[index]
-    if item then
-        item:use(player)  -- Suponiendo que el ítem tiene un método `use` que interactúa con el jugador
-        self:removeItem(item)  -- Opcionalmente removemos el ítem después de usarlo
+    local item = self:getItems()[index]
+    if item and not item.deleted then
+        -- Aplicar el efecto del ítem
+        item:applyEffect(player)
+
+        -- Reducir la cantidad del ítem
+        item.quantity = item.quantity - 1
+        print("Usaste " .. item.name .. ". Quedan " .. item.quantity .. ".")
+
+        -- Si la cantidad es menor o igual a 0, remover el ítem
+        if item.quantity <= 0 then
+            self:removeItem(item)
+        end
     else
         print("No hay un ítem en esa posición del inventario.")
     end
