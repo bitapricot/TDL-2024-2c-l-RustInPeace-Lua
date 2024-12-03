@@ -5,7 +5,7 @@ local Game = {}
 Game.__index = Game
 
 local objectivesData = require('assets/objectives/objectives')
-local Objective = require ("Objective")
+local Objective = require("Objective")
 local ZoneManager = require("zone_manager")
 local Zone = require 'Zone'
 local PlayableCharacter = require 'PlayableCharacter'
@@ -35,6 +35,10 @@ function Game:load()
 end
 
 function Game:update(dt)
+    if self.player.isDead then
+        return
+    end
+
     zoneManager.currentZone:update(dt, self.player) -- Actualiza la zona activa
     self.player:update(dt, self.camera) -- Actualiza el jugador
     world:update(dt) -- Actualiza el mundo físico
@@ -42,7 +46,7 @@ function Game:update(dt)
     self.player.y = self.player.collider:getY()
 
     for _, objective in ipairs(self.objectives) do
-        objective:update(self.player)  -- Verifica si los objetivos se cumplen
+        objective:update(self.player) -- Verifica si los objetivos se cumplen
     end
 
     -- Limit char position inside map
@@ -109,10 +113,12 @@ function Game:draw()
 
 end
 
-
 function Game:drawImportantMessage(message)
     local screenWidth = love.graphics.getWidth()
     local screenHeight = love.graphics.getHeight()
+    
+    love.graphics.setColor(0, 0, 0, 0.6) -- Negro con opacidad (0.6)
+    love.graphics.rectangle("fill", 0, 0, screenWidth, screenHeight) -- Rectángulo cubriendo toda la pantalla
 
     local barHeight = 50
     local barY = (screenHeight / 2) - (barHeight / 2)
@@ -177,7 +183,8 @@ function Game:loadObjectives()
     local parsedObjectives = {}
 
     for _, objectiveData in ipairs(objectivesData) do
-        local objective = Objective:new(objectiveData.description, objectiveData.condition, objectiveData.onCompletion, {})
+        local objective = Objective:new(objectiveData.description, objectiveData.condition, objectiveData.onCompletion,
+            {})
         table.insert(parsedObjectives, objective)
     end
 
@@ -205,6 +212,5 @@ function Game:objectivesCompleted()
 
     return true
 end
-
 
 return Game

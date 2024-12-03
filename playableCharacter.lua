@@ -104,7 +104,9 @@ end
 
 function PlayableCharacter:takeDamage(amount)
     -- Reducir la salud del personaje
-    self.health = self.health - amount
+    local updatedHealth = self.health - amount
+    if updatedHealth < 0 then updatedHealth = 0 end
+    self.health = updatedHealth
 
     -- Imprimir mensaje en consola
     print("¡Has recibido " .. amount .. " de daño! Salud actual: " .. self.health .. "/" .. self.maxHealth)
