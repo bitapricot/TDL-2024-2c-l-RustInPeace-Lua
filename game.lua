@@ -4,6 +4,8 @@ local scaleX, scaleY = 1.7, 2
 local Game = {}
 Game.__index = Game
 
+local objectivesData = require('assets/objectives/objectives')
+local Objective = require ("Objective")
 local ZoneManager = require("zone_manager")
 local Zone = require 'Zone'
 local PlayableCharacter = require 'PlayableCharacter'
@@ -13,8 +15,9 @@ zoneManager = ZoneManager:new('assets/zones/zones') -- static
 
 function Game:new()
     local obj = setmetatable({}, Game)
-    obj.camera = camera()                -- Cámara
-    obj.player = nil                     -- Instancia del jugador
+    obj.camera = camera() -- Cámara
+    obj.player = nil -- Instancia del jugador
+    obj.objectives = self:loadObjectives()
     return obj
 end
 
@@ -32,17 +35,20 @@ function Game:load()
 end
 
 function Game:update(dt)
-    zoneManager.currentZone:update(dt, self.player)  -- Actualiza la zona activa
-    self.player:update(dt, self.camera)  -- Actualiza el jugador
-    world:update(dt)                     -- Actualiza el mundo físico
-
+    zoneManager.currentZone:update(dt, self.player) -- Actualiza la zona activa
+    self.player:update(dt, self.camera) -- Actualiza el jugador
+    world:update(dt) -- Actualiza el mundo físico
     self.player.x = self.player.collider:getX()
     self.player.y = self.player.collider:getY()
-    
+
+    for _, objective in ipairs(self.objectives) do
+        objective:update(self.player)  -- Verifica si los objetivos se cumplen
+    end
+
     -- Limit char position inside map
     local mapWidth = zoneManager.currentZone.map.width * zoneManager.currentZone.map.tilewidth * scaleX
     local mapHeight = zoneManager.currentZone.map.height * zoneManager.currentZone.map.tileheight * scaleY
-    local playerWidth = 12 * scaleX 
+    local playerWidth = 12 * scaleX
     local playerHeight = 18 * scaleY
 
     -- Limit x axis
@@ -83,15 +89,41 @@ function Game:update(dt)
     end
 end
 
-
 function Game:draw()
     self.camera:attach()
-    zoneManager.currentZone:draw()  -- Dibuja el mapa y objetos de la zona
-    self.player:draw()      -- Dibuja al jugador
+    zoneManager.currentZone:draw() -- Dibuja el mapa y objetos de la zona
+    self.player:draw() -- Dibuja al jugador
     self.camera:detach()
 
     self:drawInventory()
     self:drawStats()
+    self:drawObjectives()
+
+    if self.player.isDead then
+        self:drawImportantMessage("¡Has muerto!")
+    end
+
+    if self:objectivesCompleted() then
+        self:drawImportantMessage("¡Has escapado del Espíritu Vengativo!")
+    end
+
+end
+
+
+function Game:drawImportantMessage(message)
+    local screenWidth = love.graphics.getWidth()
+    local screenHeight = love.graphics.getHeight()
+
+    local barHeight = 50
+    local barY = (screenHeight / 2) - (barHeight / 2)
+
+    love.graphics.setColor(1, 0, 0, 0.8)
+    love.graphics.rectangle("fill", 0, barY, screenWidth, barHeight)
+
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.printf(message, 0, barY + 10, screenWidth, "center")
+
+    love.graphics.setColor(1, 1, 1)
 end
 
 function Game:drawInventory()
@@ -117,28 +149,62 @@ function Game:drawInventory()
 
         -- La idea seria mostrar los items asi:
         -- "Nombre x{quantity} [{key_binding}]"
-        love.graphics.print("[" .. i .."] " .. item.name .. " x" .. item.quantity, inventoryX + 20, itemY + 2) -- Texto desplazado a la derecha del ícono
+        love.graphics.print("[" .. i .. "] " .. item.name .. " x" .. item.quantity, inventoryX + 20, itemY + 2) -- Texto desplazado a la derecha del ícono
     end
 end
 
 function Game:drawStats()
     -- Coordenadas fijas en la esquina superior derecha
-    local margin = 20  -- Espaciado desde los bordes
-    local iconSize = 20  -- Tamaño de los íconos
+    local margin = 20 -- Espaciado desde los bordes
+    local iconSize = 20 -- Tamaño de los íconos
 
     -- HP
     local xPos = love.graphics.getWidth() - margin - iconSize - 50
     local yPos = margin
     love.graphics.draw(self.heartIcon, xPos, yPos, 0, 0.85, 0.85)
-    love.graphics.setColor(1, 1, 1)  -- Blanco para el texto
+    love.graphics.setColor(1, 1, 1) -- Blanco para el texto
     love.graphics.print(self.player.health .. "/" .. self.player.maxHealth, xPos + iconSize + 5, yPos)
 
     -- Sanity
-    yPos = yPos + iconSize + margin  -- Espaciado entre los iconos
+    yPos = yPos + iconSize + margin -- Espaciado entre los iconos
     love.graphics.draw(self.brainIcon, xPos, yPos, 0, 0.85, 0.85)
     love.graphics.print(self.player.sanity .. "/" .. self.player.maxSanity, xPos + iconSize + 5, yPos)
 
     love.graphics.setColor(1, 1, 1)
 end
+
+function Game:loadObjectives()
+    local parsedObjectives = {}
+
+    for _, objectiveData in ipairs(objectivesData) do
+        local objective = Objective:new(objectiveData.description, objectiveData.condition, objectiveData.onCompletion, {})
+        table.insert(parsedObjectives, objective)
+    end
+
+    return parsedObjectives
+end
+
+function Game:drawObjectives()
+    local startX, startY = 10, 500 -- Posición inicial para dibujar los objetivos
+    local lineHeight = 30 -- Espacio entre cada línea de texto
+
+    for _, objective in ipairs(self.objectives) do
+        if not objective.isCompleted then
+            love.graphics.print(objective.description, startX, startY)
+            startY = startY + lineHeight
+        end
+    end
+end
+
+function Game:objectivesCompleted()
+    for _, objective in ipairs(self.objectives) do
+        if not objective.isCompleted then
+            return false
+        end
+    end
+
+    return true
+end
+
 
 return Game

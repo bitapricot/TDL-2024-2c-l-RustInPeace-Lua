@@ -31,9 +31,13 @@ function Inventory:addItem(item)
     end
 end
 
-
-function Inventory:getItem(index)
-    return self:getItems()[index]
+function Inventory:hasItem(description)
+    for _, item in ipairs(self:getItems()) do
+        if item.name == description and not item.deleted then
+            return true
+        end
+    end
+    return false
 end
 
 function Inventory:getItems()

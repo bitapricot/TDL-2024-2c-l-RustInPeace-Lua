@@ -2,11 +2,14 @@ ZoneManager = {}
 ZoneManager.__index = ZoneManager
 
 local Zone = require('Zone')
+local Spirit = require('Spirit')
 
 function ZoneManager:new(filePath)
     local manager = {
         zones = self:loadZones(filePath),
-        currentZone = nil
+        currentZone = nil,
+        globalEnemies = {}  -- Lista global de enemigos (no se destruyen al cambiar de zona)
+        -- Tener en cuenta que en esta demo solo contiene al espiritu vengativo
     } 
     setmetatable(manager, self)
     return manager
@@ -34,6 +37,11 @@ function ZoneManager:setCurrentZone(zoneId)
     print(self.currentZone.id)
     self.currentZone:loadCurrentCollisions()
     self.currentZone:loadCurrentItems()
+
+    -- Traer los enemigos globales a la zona activa
+    for _, enemy in ipairs(self.globalEnemies) do
+        table.insert(self.currentZone.enemies, enemy)
+    end
 end
 
 function ZoneManager:getZone(zoneId)
@@ -70,5 +78,25 @@ function ZoneManager:transitionTo(zoneId, player, entryPoint)
         player:setPosition(entryPoint)
     end
 end
+
+function ZoneManager:addEnemy(enemy)
+    table.insert(self.globalEnemies, enemy)
+end
+
+function ZoneManager:spawnSpirit()
+    -- Coordenadas de aparición del Spirit
+    local spawnX, spawnY = 300, 300
+
+    local spirit = Spirit:new(spawnX, spawnY)
+
+    -- Agregar al registro global de enemigos
+    self:addEnemy(spirit)
+
+    -- Agregar el Spirit a la zona actual
+    table.insert(self.currentZone.enemies, spirit)
+
+    print("¡El Espíritu Vengativo ha aparecido en la zona!")
+end
+
 
 return ZoneManager

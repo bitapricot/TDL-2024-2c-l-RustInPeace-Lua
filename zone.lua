@@ -6,11 +6,11 @@ local Zone = {}
 Zone.__index = Zone
 
 -- VER DONDE PONER LA INSTANCIACION DE ENEMIGOS
-local Soul = require("Soul")
-local Draugr = require("Draugr")
-local Spirit = require("Spirit")
+-- local Soul = require("Soul")
+-- local Draugr = require("Draugr")
+-- local Spirit = require("Spirit")
 
-local enemies = {Soul:new(100, 100), Draugr:new(200, 200), Spirit:new(400, 400)}
+-- local enemies = {Soul:new(100, 100), Draugr:new(200, 200), Spirit:new(400, 400)}
 
 function Zone:new(mapFile, zoneId, name, connections)
     local obj = setmetatable({}, Zone)
@@ -22,7 +22,8 @@ function Zone:new(mapFile, zoneId, name, connections)
     obj.connections = {}
     obj.isActive = false
     obj.entryPoint = {}
-    
+    obj.enemies = {}
+
     -- Escalar las conexiones
     if connections then
         for _, connection in ipairs(connections) do
@@ -102,7 +103,7 @@ function Zone:update(dt, player)
             end
         end
 
-        for _, enemy in ipairs(enemies) do
+        for _, enemy in ipairs(self.enemies) do
             enemy:update(dt, player)
         end
 
@@ -125,8 +126,8 @@ function Zone:draw()
 
         self.map:drawLayer(self.map.layers['ground'])
         self.map:drawLayer(self.map.layers['walls'])
-        self.map:drawLayer(self.map.layers['connections'])
         self.map:drawLayer(self.map.layers['interactions'])
+        self.map:drawLayer(self.map.layers['connections'])
         -- self.map:drawLayer(self.map.layers['items'])
 
         love.graphics.pop()
@@ -142,7 +143,7 @@ function Zone:draw()
             end
         end
 
-        for _, enemy in ipairs(enemies) do
+        for _, enemy in ipairs(self.enemies) do
             enemy:draw()
         end
     end

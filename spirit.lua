@@ -4,20 +4,22 @@ local Enemy = require("Enemy")
 
 local Spirit = {}
 Spirit.__index = Spirit
-setmetatable(Spirit, { __index = require("Enemy") }) -- Hereda de Enemy
+setmetatable(Spirit, {
+    __index = require("Enemy")
+}) -- Hereda de Enemy
 
 function Spirit:new(x, y)
     local spirit = Enemy:new(x, y, 200, 30) -- Velocidad rápida, mucho daño
     spirit.state = "hidden"
     spirit.effectTimer = 0
-    
+
     setmetatable(spirit, Spirit)
 
     return spirit
 end
 
 function Spirit:update(dt, player)
-  if self.currentAnimation then
+    if self.currentAnimation then
         self.currentAnimation:update(dt)
     end
     if self.state == "hidden" then
@@ -45,14 +47,22 @@ function Spirit:update(dt, player)
 end
 
 function Spirit:draw()
-   if self.state == "hidden" then
-       love.graphics.setColor(1, 0, 0, 0.3)
-   else
-      love.graphics.setColor(1, 0, 0, 1)
-   end
-   love.graphics.circle("fill", self.x, self.y, 20)
-    
+    if self.state == "defeated" then
+        return
+    end
+    if self.state == "hidden" then
+        love.graphics.setColor(1, 0, 0, 0.3)
+    else
+        love.graphics.setColor(1, 0, 0, 1)
+    end
+    love.graphics.circle("fill", self.x, self.y, 20)
+
     love.graphics.setColor(1, 1, 1)
+end
+
+function Spirit:stopChasing()
+    self.state = "defeated"
+    print("El Espíritu Vengativo ha dejado de perseguirte.")
 end
 
 return Spirit

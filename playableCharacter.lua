@@ -16,6 +16,7 @@ function PlayableCharacter:new(x, y)
     obj.maxHealth = 100
     obj.maxSanity = 100
     obj.inventory = Inventory:new()
+    obj.isDead = false
     obj.spriteSheet = love.graphics.newImage('assets/sprites/player-sheet.png')
     obj.grid = anim8.newGrid(12, 18, obj.spriteSheet:getWidth(), obj.spriteSheet:getHeight())
     obj.animations = {
@@ -129,5 +130,26 @@ function PlayableCharacter:setPosition(entryPoint)
     self.y = self.collider:getY()
 end
 
+function PlayableCharacter:isNearCorpse()
+    -- Coordenadas del cadáver
+    local corpseX, corpseY = 259.82 * 1.7, 238.55 * 2
+    
+    local proximityRange = 50  -- Rango de proximidad de 50 píxeles
+
+    local distance = math.sqrt((self.x - corpseX)^2 + (self.y - corpseY)^2)
+
+    if distance <= proximityRange then
+        if love.keyboard.isDown("e") then
+            return true
+        end
+    end
+
+    return false
+end
+
+function PlayableCharacter:die()
+    self.isDead = true
+    print("El personaje ha muerto.")
+end
 
 return PlayableCharacter
