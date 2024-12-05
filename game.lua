@@ -1,6 +1,6 @@
 local wf = require 'lib/windfield'
 local camera = require 'lib/camera'
-local scaleX, scaleY = 1.7, 2
+-- local scaleX, scaleY = 1.7, 2
 local Game = {}
 Game.__index = Game
 
@@ -12,6 +12,8 @@ local PlayableCharacter = require 'PlayableCharacter'
 
 world = wf.newWorld(0, 0)
 zoneManager = ZoneManager:new('assets/zones/zones') -- static
+scaleX = 1.7
+scaleY = 2
 
 function Game:new()
     local obj = setmetatable({}, Game)
