@@ -1,18 +1,12 @@
 local sti = require "sti"
 local itemsData = require('assets/items/items')
+local EnemyFactory = require("EnemyFactory")
 
 local scaleX, scaleY = 1.7, 2
 local Zone = {}
 Zone.__index = Zone
 
--- VER DONDE PONER LA INSTANCIACION DE ENEMIGOS
--- local Soul = require("Soul")
--- local Draugr = require("Draugr")
--- local Spirit = require("Spirit")
-
--- local enemies = {Soul:new(100, 100), Draugr:new(200, 200), Spirit:new(400, 400)}
-
-function Zone:new(mapFile, zoneId, name, connections)
+function Zone:new(mapFile, zoneId, name, connections, enemyDefinitions)
     local obj = setmetatable({}, Zone)
     obj.map = sti(mapFile) -- Carga el mapa desde Tiled
     obj.id = zoneId
@@ -22,7 +16,7 @@ function Zone:new(mapFile, zoneId, name, connections)
     obj.connections = {}
     obj.isActive = false
     obj.entryPoint = {}
-    obj.enemies = {}
+    obj.enemies = Zone:loadCurrentEnemies(enemyDefinitions)
 
     -- Escalar las conexiones
     if connections then
@@ -60,6 +54,29 @@ function Zone:new(mapFile, zoneId, name, connections)
     end
 
     return obj
+end
+
+function Zone:loadCurrentEnemies(enemyDefinitions)
+    local enemies = {}
+    for type, position in pairs(enemyDefinitions) do
+        local enemy = EnemyFactory.createEnemy(type, position.x, position.y)
+        table.insert(enemies, enemy)
+        print("Spawnea enemigo de tipo " .. type .. " en la zona")
+    end
+    
+    return enemies
+end
+
+function Zone:updateEnemies(dt, player)
+    for _, enemy in ipairs(self.enemies) do
+        enemy:update(dt, player)
+    end
+end
+
+function Zone:drawEnemies()
+    for _, enemy in ipairs(self.enemies) do
+        enemy:draw()
+    end
 end
 
 function Zone:loadCurrentCollisions()
