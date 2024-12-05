@@ -21,7 +21,7 @@ function ZoneManager:loadZones(filePath)
     local currentZoneConnections = {}
 
     for _, zoneData in ipairs(zonesData) do
-        table.insert(parsedZones, Zone:new(zoneData.mapFile, zoneData.id, zoneData.name, zoneData.connections))
+        table.insert(parsedZones, Zone:new(zoneData.mapFile, zoneData.id, zoneData.name, zoneData.connections, zoneData.enemies))
     end
 
     return parsedZones

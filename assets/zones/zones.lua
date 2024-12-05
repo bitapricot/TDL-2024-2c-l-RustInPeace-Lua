@@ -15,7 +15,8 @@ zones = { -- PENDIENTE COMPLETAR BIEN LAS COORDENADAS Y LOS MAPAS
             x = 20,
             y = 300
         }
-    }}
+    }},
+    enemies = {}
 }, {
     id = "zone2",
     name = "Forest (bridge)",
@@ -44,7 +45,8 @@ zones = { -- PENDIENTE COMPLETAR BIEN LAS COORDENADAS Y LOS MAPAS
             x = 800,
             y = 50
         }
-    }}
+    }},
+    enemies = {}
 }, {
     id = "zone3",
     name = "Forest (catacombs entrance)",
@@ -73,7 +75,13 @@ zones = { -- PENDIENTE COMPLETAR BIEN LAS COORDENADAS Y LOS MAPAS
             x = 760,
             y = 120
         }
-    }}
+    }},
+    enemies = {
+        draugr = {
+            x = 450,
+            y = 300
+        }
+    }
 }, {
     id = "zone4",
     name = "The Catacombs (main hall)",
@@ -114,7 +122,17 @@ zones = { -- PENDIENTE COMPLETAR BIEN LAS COORDENADAS Y LOS MAPAS
             x = 100,
             y = 100
         }
-    }}
+    }},
+    enemies = {
+        soul = {
+            x = 450,
+            y = 300
+        },
+        draugr = {
+            x = 220,
+            y = 120
+        }
+    }
 }, {
     id = "zone5",
     name = "The Catacombs (hall end)",
@@ -131,7 +149,17 @@ zones = { -- PENDIENTE COMPLETAR BIEN LAS COORDENADAS Y LOS MAPAS
             x = 850,
             y = 160
         }
-    }}
+    }},
+    enemies = {
+        soul = {
+            x = 250,
+            y = 300
+        },
+        draugr = {
+            x = 430,
+            y = 100
+        }
+    }
 }, {
     id = "zone6",
     name = "The Catacombs (ritual)",
@@ -160,7 +188,8 @@ zones = { -- PENDIENTE COMPLETAR BIEN LAS COORDENADAS Y LOS MAPAS
             x = 150,
             y = 150
         }
-    }}
+    }},
+    enemies = {}
 }, {
     id = "zone7",
     name = "The Catacombs (ritual cont.)",
@@ -189,7 +218,17 @@ zones = { -- PENDIENTE COMPLETAR BIEN LAS COORDENADAS Y LOS MAPAS
             x = 150,
             y = 150
         }
-    }}
+    }},
+    enemies = {
+        soul = {
+            x = 450,
+            y = 300
+        },
+        draugr = {
+            x = 220,
+            y = 120
+        }
+    }
 }, {
     id = "zone8",
     name = "The Catacombs (exit)",
@@ -206,7 +245,17 @@ zones = { -- PENDIENTE COMPLETAR BIEN LAS COORDENADAS Y LOS MAPAS
             x = 150,
             y = 150
         }
-    }}
+    }},
+    enemies = {
+        soul = {
+            x = 450,
+            y = 300
+        },
+        draugr = {
+            x = 220,
+            y = 120
+        }
+    }
 }, {
     id = "zone9",
     name = "The Catacombs (castle garden)",
@@ -223,12 +272,14 @@ zones = { -- PENDIENTE COMPLETAR BIEN LAS COORDENADAS Y LOS MAPAS
             x = 800,
             y = 600
         }
-    }}
+    }},
+    enemies = {}
 }, {
     id = "zone10",
     name = "The Castle (entrance)",
     mapFile = "map_castle.lua",
-    connections = {}
+    connections = {},
+    enemies = {}
 }}
 
 return zones
