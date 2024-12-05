@@ -13,8 +13,8 @@ end
 function Inventory:addItem(item)
     -- Buscar si ya existe un ítem con el mismo nombre y que no esté eliminado
     local existingItem = nil
-    for _, invItem in ipairs(self.items) do
-        if invItem.name == item.data.name and not invItem.deleted then
+    for _, invItem in ipairs(self:getItems()) do
+        if invItem.name == item.data.name then
             existingItem = invItem
             break
         end
@@ -26,7 +26,7 @@ function Inventory:addItem(item)
         print("Cantidad de " .. item.data.name .. " incrementada a " .. existingItem.quantity .. ".")
     else
         -- Si el ítem no existe o está eliminado, agregar uno nuevo
-        table.insert(self.items, Item:new(item.data.name, item.data.effect, item.data.quantity, love.graphics.newImage(item.data.sprite)))
+        table.insert(self.items, Item:new(item.data.name, item.data.effect, item.data.quantity, item.sprite))
         print(item.data.name .. " fue agregado al inventario.")
     end
 end
@@ -68,16 +68,18 @@ end
 function Inventory:useItem(index, player)
     local item = self:getItems()[index]
     if item and not item.deleted then
-        -- Aplicar el efecto del ítem
-        item:applyEffect(player)
+        if item.effect then
+            -- Aplicar el efecto del ítem
+            item:applyEffect(player)
 
-        -- Reducir la cantidad del ítem
-        item.quantity = item.quantity - 1
-        print("Usaste " .. item.name .. ". Quedan " .. item.quantity .. ".")
+            -- Reducir la cantidad del ítem
+            item.quantity = item.quantity - 1
+            print("Usaste " .. item.name .. ". Quedan " .. item.quantity .. ".")
 
-        -- Si la cantidad es menor o igual a 0, remover el ítem
-        if item.quantity <= 0 then
-            self:removeItem(item)
+            -- Si la cantidad es menor o igual a 0, remover el ítem
+            if item.quantity <= 0 then
+                self:removeItem(item)
+            end
         end
     else
         print("No hay un ítem en esa posición del inventario.")

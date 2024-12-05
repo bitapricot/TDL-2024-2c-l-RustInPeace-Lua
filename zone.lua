@@ -76,17 +76,30 @@ end
 function Zone:loadCurrentItems()
     for _, itemData in ipairs(itemsData) do
         if itemData.zoneId == self.id then
+            if self:hasItem(itemData.name) then break end
             table.insert(self.items, {
                 data = itemData,
                 x = itemData.x,
                 y = itemData.y,
                 quantity = itemData.quantity,
                 effect = itemData.effect,
-                sprite = love.graphics.newImage(itemData.sprite) -- Carga el sprite
+                img = itemData.sprite,
+                sprite = love.graphics.newImage(itemData.sprite), -- Carga el sprite
+                grabbed = false
             })
         end
     end
 end
+
+function Zone:hasItem(name)
+    for _, item in ipairs(self.items) do
+        if item.data.name == name then
+            return true
+        end
+    end
+    return false
+end
+
 
 function Zone:clear()
     world:destroy()
@@ -97,9 +110,10 @@ function Zone:update(dt, player)
         for i = #self.items, 1, -1 do
             local item = self.items[i]
             local distance = math.sqrt((item.x - player.x) ^ 2 + (item.y - player.y) ^ 2)
-            if distance < 20 then -- Rango de recogida
+            if distance < 20 and not item.grabbed then -- Rango de recogida
                 player:addToInventory(item) -- Agrega al inventario
-                table.remove(self.items, i) -- Remueve del mapa
+                -- table.remove(self.items, i) -- Remueve del mapa
+                item.grabbed = true
             end
         end
 
@@ -133,13 +147,13 @@ function Zone:draw()
         love.graphics.pop()
 
         for _, item in ipairs(self.items) do
-            if item.sprite then
+            if item.sprite and not item.grabbed then
                 local spriteWidth = item.sprite:getWidth() * scaleX
                 local spriteHeight = item.sprite:getHeight() * scaleY
 
                 love.graphics.draw(item.sprite, item.x - spriteWidth / 2, item.y - spriteHeight / 2, 0, scaleX, scaleY)
-            else
-                love.graphics.print(item.data.name, item.x, item.y)
+            -- else
+                -- love.graphics.print(item.data.name, item.x, item.y)
             end
         end
 

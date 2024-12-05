@@ -8,6 +8,7 @@ function Item:new(name, effect, quantity, sprite)
     item.effect = effect                -- Función de efecto del ítem
     item.quantity = quantity
     item.sprite = sprite
+    item.grabbed = false
     item.deleted = false
     return item
 end
@@ -23,9 +24,17 @@ function Item:applyEffect(target)
 end
 
 -- Dibuja el ítem en pantalla (para interfaz o inventario)
-function Item:draw(x, y)
-    -- Ejemplo básico de visualización
-    love.graphics.print(self.name, x, y)
+-- function Item:draw(x, y)
+--     -- Ejemplo básico de visualización
+--     love.graphics.print(self.name, x, y)
+-- end
+
+function Item:grab()
+    self.grabbed = true
+end
+
+function Item:drop()
+    self.grabbed = false
 end
 
 return Item
