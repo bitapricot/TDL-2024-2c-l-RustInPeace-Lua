@@ -11,21 +11,19 @@ local spriteHeight = spriteSheet:getHeight() / totalRows
 
 -- Animaciones para Soul
 local soulAnimations = {
-    down = {}, -- Sprites para cuando se mueve hacia abajo (fila 7)
-    up = {}    -- Sprites para cuando se mueve hacia arriba (fila 4)
+    down = {},
+    up = {}
 }
 
--- Animación hacia abajo (fila 7)
 for col = 6, 8 do
     table.insert(soulAnimations.down, love.graphics.newQuad(
-        col * spriteWidth, 7 * spriteHeight, spriteWidth, spriteHeight, spriteSheet:getDimensions()
+        col * spriteWidth, 4 * spriteHeight, spriteWidth, spriteHeight, spriteSheet:getDimensions()
     ))
 end
 
--- Animación hacia arriba (fila 4)
 for col = 6, 8 do
     table.insert(soulAnimations.up, love.graphics.newQuad(
-        col * spriteWidth, 4 * spriteHeight, spriteWidth, spriteHeight, spriteSheet:getDimensions()
+        col * spriteWidth, 7 * spriteHeight, spriteWidth, spriteHeight, spriteSheet:getDimensions()
     ))
 end
 
@@ -40,7 +38,6 @@ function Soul:new(x, y)
     soul.attackCooldownTime = 1.5 -- Tiempo de cooldown entre ataques (ajústalo como desees)
     soul.flashTimer = 0 -- Temporizador para el efecto visual de daño
     soul.flashDuration = 0.2 -- Duración del efecto visual de daño (en segundos)
-    soul.flashColor = {1, 0, 0, 0.3} -- Color rojo con transparencia (rgba)
     setmetatable(soul, Soul)
     return soul
 end
@@ -124,7 +121,7 @@ function Soul:draw()
 
     -- Dibuja el efecto de flash si está activo
     if self.flashTimer > 0 then
-        love.graphics.setColor(self.flashColor)  -- Cambia el color a rojo con transparencia
+        love.graphics.setColor(1, 0, 0, 0.3)
         love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth() * scaleX, love.graphics.getHeight() * scaleY)  -- Dibuja el rectángulo sobre toda la pantalla
         love.graphics.setColor(1, 1, 1, 1)  -- Vuelve al color normal
     end

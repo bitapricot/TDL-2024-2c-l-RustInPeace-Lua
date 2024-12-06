@@ -85,7 +85,7 @@ end
 
 function ZoneManager:spawnSpirit()
     -- Coordenadas de aparición del Spirit
-    local spawnX, spawnY = 300, 300
+    local spawnX, spawnY = 240 * scaleX, 75 * scaleY
 
     local spirit = Spirit:new(spawnX, spawnY)
 

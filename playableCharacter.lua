@@ -134,7 +134,7 @@ end
 
 function PlayableCharacter:isNearCorpse()
     -- Coordenadas del cadáver
-    local corpseX, corpseY = 259.82 * 1.7, 238.55 * 2
+    local corpseX, corpseY = 259.82 * scaleX, 238.55 * scaleY
     
     local proximityRange = 50  -- Rango de proximidad de 50 píxeles
 

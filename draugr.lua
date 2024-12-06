@@ -38,7 +38,6 @@ function Draugr:new(x, y)
     draugr.animationSpeed = 0.2
     draugr.flashTimer = 0  -- Temporizador para el efecto visual
     draugr.flashDuration = 0.2  -- Duración del efecto visual
-    draugr.flashColor = {1, 0, 0, 0.3}  -- Color rojo translúcido
     setmetatable(draugr, Draugr)
     return draugr
 end
@@ -121,7 +120,7 @@ function Draugr:draw()
 
     -- Dibuja el efecto de flash si está activo
     if self.flashTimer > 0 then
-        love.graphics.setColor(self.flashColor)  -- Cambia el color a rojo con transparencia
+        love.graphics.setColor(1, 0, 0, 0.3)
         love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth() * scaleX, love.graphics.getHeight() * scaleY)  -- Dibuja el rectángulo sobre toda la pantalla
         love.graphics.setColor(1, 1, 1, 1)  -- Vuelve al color normal
     end

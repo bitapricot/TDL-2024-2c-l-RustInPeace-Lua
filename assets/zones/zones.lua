@@ -113,14 +113,14 @@ zones = { -- PENDIENTE COMPLETAR BIEN LAS COORDENADAS Y LOS MAPAS
     }, {
         toZone = "zone6",
         area = {
-            x1 = 366.50,
-            y1 = 261.50,
+            x1 = 364.5,
+            y1 = 250,
             x2 = 384,
             y2 = 290
         },
         entryPoint = {
             x = 100,
-            y = 100
+            y = 200
         }
     }},
     enemies = {
@@ -173,8 +173,8 @@ zones = { -- PENDIENTE COMPLETAR BIEN LAS COORDENADAS Y LOS MAPAS
             y2 = 79.33
         },
         entryPoint = {
-            x = 850,
-            y = 160
+            x = 520,
+            y = 580
         }
     }, {
         toZone = "zone7",
