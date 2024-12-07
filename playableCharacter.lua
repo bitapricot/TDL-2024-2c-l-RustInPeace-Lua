@@ -10,7 +10,7 @@ function PlayableCharacter:new(x, y)
     local obj = setmetatable({}, PlayableCharacter)
     obj.x = x
     obj.y = y
-    obj.speed = 25000
+    obj.speed = 16000
     obj.health = 50  -- Inicialización de HP
     obj.sanity = 50  -- Inicialización de Sanity
     obj.maxHealth = 100
