@@ -16,6 +16,11 @@ local objectivesData = {{
     end,
     onCompletion = function(player)
         print("¡Has dado la ofrenda al cadáver!")
+        for _, item in ipairs(player.inventory:getItems()) do
+            if item.name == "Offering" then
+                player.inventory:removeItem(item)
+            end
+        end
         zoneManager:spawnSpirit()
     end
 }, {

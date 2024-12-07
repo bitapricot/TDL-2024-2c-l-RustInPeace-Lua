@@ -46,6 +46,7 @@ function Spirit:new(x, y)
 end
 
 function Spirit:update(dt, player)
+    if self.state == "defeated" then return end
     if self.attackTimer > 0 then
         self.attackTimer = self.attackTimer - dt
     end
